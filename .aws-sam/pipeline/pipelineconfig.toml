@@ -1,0 +1,24 @@
+version = 0.1
+
+[default.pipeline_bootstrap.parameters]
+oidc_provider_url = "https://token.actions.githubusercontent.com"
+oidc_client_id = "sts.amazonaws.com"
+github_org = "drex7"
+github_repo = "incident-reporting-app"
+deployment_branch = "main"
+oidc_provider = "github-actions"
+permissions_provider = "OpenID Connect (OIDC)"
+
+[dev.pipeline_bootstrap.parameters]
+pipeline_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-Nczlvx5pd3Ek"
+cloudformation_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-XmRsjzRf9BmG"
+artifacts_bucket = "aws-sam-cli-managed-dev-pipeline-r-artifactsbucket-wnnd5c2g241w"
+image_repository = "985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-dev-pipeline-resources-imagerepository-puijfttbgcrv"
+region = "eu-central-1"
+
+[prod.pipeline_bootstrap.parameters]
+pipeline_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-NMudPF745i0g"
+cloudformation_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-gZiJU5m4kBxE"
+artifacts_bucket = "aws-sam-cli-managed-prod-pipeline--artifactsbucket-txckp9tvibxu"
+image_repository = "985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-prod-pipeline-resources-imagerepository-gqribwl6ih7t"
+region = "eu-central-1"
