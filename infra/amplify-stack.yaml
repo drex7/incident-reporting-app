@@ -68,6 +68,7 @@ Resources:
 
   MainBranch:
     Type: AWS::Amplify::Branch
+    DependsOn: AmplifyApp
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: main
@@ -76,6 +77,7 @@ Resources:
 
   DevBranch:
     Type: AWS::Amplify::Branch
+    DependsOn: AmplifyApp
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: dev
