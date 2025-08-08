@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to deploy an AWS Amplify application for the frontend of Incident Reporting app
+
+Parameters:
+  GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
+  BranchName: { Type: String, Default: main }
+  GitHubTokenSecretARN: { Type: String }
+  AmplifyStage: {Type: String, Default: PRODUCTION }
+
+Resources:
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: IncidentReportingAmplifyApp
+      Repository: !Ref GitRepoUrl
+      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:cmrp-frontend/token}}' # Referencing a secret in Secrets Manager for GitHub token
+      BuildSpec: |
+        version: 1
+        backend:
+          phases:
+            build:
+              commands:
+                - npm ci --cache .npm --prefer-offline
+                - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npx ng version
+            build:
+              commands:
+                - npx ng build --configuration=production
+          artifacts:
+            baseDirectory: dist/amplify-angular-template/browser
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - .npm/**/*
+              - node_modules/**/*
+
+  AmplifyBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: $AWS_BRANCH
+      EnableAutoBuild: true
+      Stage: !Ref AmplifyStage
+
+Outputs:
+  AmplifyAppId:
+    Description: The ID of the deployed Amplify application
+    Value: !GetAtt AmplifyApp.AppId
+  AmplifyAppName:
+    Description: The name of the deployed Amplify application
+    Value: !GetAtt AmplifyApp.Name

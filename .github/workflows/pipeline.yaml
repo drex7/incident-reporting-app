@@ -6,7 +6,7 @@ on:
       - 'main'
       - 'feature**'
   delete:
-    branches:
+    branches: 
       - 'feature**'
 
 env:

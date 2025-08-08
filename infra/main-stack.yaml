@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Top-level stack template that deploys a City .
+
+Parameters:
+  AppName: { Type: String, Default: Taskify }
+  ProjectTag: { Type: String, Default: "incident-app" }
+  # TemplatesURL: 
+  #   Type: String
+  
+
+Resources:
+  Access:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplateBucketName}.s3.eu-central-1.amazonaws.com/infra/networking-template.yaml'
+      Parameters:
+        AppName: !Ref AppName
+        ProjectTag: !Ref ProjectTag
+
+  AmplifyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplateBucketName}.s3.eu-central-1.amazonaws.com/templates/amplify-stack.yaml'
+      Parameters:
+        AppName: !Ref AppName
+        ProjectTag: !Ref ProjectTag
+        ECRRepoName: !Ref ECRRepoName
+        TemplateBucketName: !Ref TemplateBucketName
+
+Outputs:
+  AmplifyAppId:
+    Value: !GetAtt AmplifyStack.Outputs.AmplifyAppId
+  AmplifyAppName:
+    Value: !GetAtt AmplifyStack.Outputs.AmplifyAppName
