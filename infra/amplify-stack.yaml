@@ -39,7 +39,7 @@ Resources:
       Name: IncidentReportingAmplifyApp
       Description: Incident Reporting App
       Repository: !Ref GitRepoUrl
-      IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      # IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
       AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:GithubAccessToken_}}' # Referencing a secret in Secrets Manager for GitHub token
       BuildSpec: |
         version: 1
