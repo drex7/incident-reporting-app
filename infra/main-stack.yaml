@@ -8,7 +8,7 @@ Parameters:
   GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:605134436600:secret:cmrp-frontend/token-FY8SnN }
 
 Resources:
-  AmplifyServiceRole:
+  AmplifyRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: AmplifyServiceRole
@@ -21,19 +21,7 @@ Resources:
               Service: amplify.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: AmplifyBasicPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:*
-                  - iam:PassRole
-                  - codebuild:*
-                  - amplify:*
-                Resource: '*'
+        - arn:aws:iam::aws:policy/policy/AdministratorAccess-Amplify
 
   AmplifyApp:
     Type: AWS::Amplify::App
@@ -41,7 +29,7 @@ Resources:
       Name: IncidentReportingAmplifyApp
       Description: Incident Reporting App
       Repository: !Ref GitRepoUrl
-      # IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      IAMServiceRole: !GetAtt AmplifyRole.Arn
       AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:GithubAccessToken_}}' # Referencing a secret in Secrets Manager for GitHub token
       BuildSpec: |
         version: 1
