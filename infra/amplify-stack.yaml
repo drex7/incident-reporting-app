@@ -73,7 +73,7 @@ Resources:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: main
       EnableAutoBuild: true
-      Stage: Production
+      Stage: PRODUCTION
 
   DevBranch:
     Type: AWS::Amplify::Branch
@@ -82,7 +82,7 @@ Resources:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: dev
       EnableAutoBuild: true
-      Stage: Development
+      Stage: DEVELOPMENT
 
 Outputs:
   AmplifyAppId:
