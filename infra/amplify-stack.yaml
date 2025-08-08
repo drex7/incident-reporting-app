@@ -13,7 +13,7 @@ Resources:
     Properties:
       Name: IncidentReportingAmplifyApp
       Repository: !Ref GitRepoUrl
-      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:cmrp-frontend/token}}' # Referencing a secret in Secrets Manager for GitHub token
+      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:GithubAccessToken_}}' # Referencing a secret in Secrets Manager for GitHub token
       BuildSpec: |
         version: 1
         backend:
