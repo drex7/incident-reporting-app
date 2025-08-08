@@ -4,18 +4,92 @@ Description: Top-level stack template that deploys a City .
 Parameters:
   AppName: { Type: String, Default: Taskify }
   ProjectTag: { Type: String, Default: "incident-app" }
-  # TemplatesURL: 
-  #   Type: String
-  
+  GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
+  GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:605134436600:secret:cmrp-frontend/token-FY8SnN }
 
 Resources:
-  AmplifyStack:
-    Type: AWS::CloudFormation::Stack
+  AmplifyServiceRole:
+    Type: AWS::IAM::Role
     Properties:
-      TemplateURL: !Sub './amplify-stack.yaml'
+      RoleName: AmplifyServiceRole
+      Description: IAM role assumed by AWS Amplify to build and deploy apps
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AmplifyBasicPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                  - iam:PassRole
+                  - codebuild:*
+                  - amplify:*
+                Resource: '*'
+
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: IncidentReportingAmplifyApp
+      Description: Incident Reporting App
+      Repository: !Ref GitRepoUrl
+      # IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:GithubAccessToken_}}' # Referencing a secret in Secrets Manager for GitHub token
+      BuildSpec: |
+        version: 1
+        backend:
+          phases:
+            build:
+              commands:
+                - npm ci --cache .npm --prefer-offline
+                - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npx ng version
+            build:
+              commands:
+                - npx ng build --configuration=production
+          artifacts:
+            baseDirectory: dist/amplify-angular-template/browser
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - .npm/**/*
+              - node_modules/**/*
+
+  MainBranch:
+    Type: AWS::Amplify::Branch
+    DependsOn: AmplifyApp
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: main
+      EnableAutoBuild: true
+      Stage: PRODUCTION
+
+  DevBranch:
+    Type: AWS::Amplify::Branch
+    DependsOn: AmplifyApp
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: dev
+      EnableAutoBuild: true
+      Stage: DEVELOPMENT
 
 Outputs:
   AmplifyAppId:
-    Value: !GetAtt AmplifyStack.Outputs.AmplifyAppId
+    Description: The ID of the deployed Amplify application
+    Value: !GetAtt AmplifyApp.AppId
   AmplifyAppName:
-    Value: !GetAtt AmplifyStack.Outputs.AmplifyAppName
+    Description: The name of the deployed Amplify application
+    Value: !GetAtt AmplifyApp.AppName
