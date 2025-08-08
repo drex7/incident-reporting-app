@@ -4,7 +4,7 @@ Description: CloudFormation template to deploy an AWS Amplify application for th
 Parameters:
   GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
   BranchName: { Type: String, Default: main }
-  GitHubTokenSecretARN: { Type: String }
+  GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:605134436600:secret:cmrp-frontend/token-FY8SnN }
   AmplifyStage: {Type: String, Default: PRODUCTION }
 
 Resources:
@@ -43,7 +43,7 @@ Resources:
     Type: AWS::Amplify::Branch
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
-      BranchName: $AWS_BRANCH
+      BranchName: !Ref BranchName
       EnableAutoBuild: true
       Stage: !Ref AmplifyStage
 

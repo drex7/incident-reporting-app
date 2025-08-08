@@ -13,11 +13,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub './amplify-stack.yaml'
-      Parameters:
-        AppName: !Ref AppName
-        ProjectTag: !Ref ProjectTag
-        ECRRepoName: !Ref ECRRepoName
-        TemplateBucketName: !Ref TemplateBucketName
 
 Outputs:
   AmplifyAppId:
