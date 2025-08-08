@@ -53,4 +53,4 @@ Outputs:
     Value: !GetAtt AmplifyApp.AppId
   AmplifyAppName:
     Description: The name of the deployed Amplify application
-    Value: !GetAtt AmplifyApp.Name
+    Value: !GetAtt AmplifyApp.AppName
