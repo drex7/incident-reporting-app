@@ -21,7 +21,7 @@ Resources:
               Service: amplify.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/policy/AdministratorAccess-Amplify
+        - arn:aws:iam::aws:policy/AdministratorAccess-Amplify
 
   AmplifyApp:
     Type: AWS::Amplify::App
