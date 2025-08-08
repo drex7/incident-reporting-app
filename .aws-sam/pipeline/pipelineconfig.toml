@@ -10,15 +10,15 @@ oidc_provider = "github-actions"
 permissions_provider = "OpenID Connect (OIDC)"
 
 [dev.pipeline_bootstrap.parameters]
-pipeline_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-Nczlvx5pd3Ek"
-cloudformation_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-XmRsjzRf9BmG"
-artifacts_bucket = "aws-sam-cli-managed-dev-pipeline-r-artifactsbucket-wnnd5c2g241w"
-image_repository = "985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-dev-pipeline-resources-imagerepository-puijfttbgcrv"
+pipeline_execution_role = "arn:aws:iam::605134436600:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-mVIQvC2b1ps9"
+cloudformation_execution_role = "arn:aws:iam::605134436600:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-vtgQSXlGijaJ"
+artifacts_bucket = "aws-sam-cli-managed-dev-pipeline-r-artifactsbucket-srhclqjttd3t"
+image_repository = "605134436600.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-dev-pipeline-resources-imagerepository-sumelqszylgv"
 region = "eu-central-1"
 
 [prod.pipeline_bootstrap.parameters]
-pipeline_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-NMudPF745i0g"
-cloudformation_execution_role = "arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-gZiJU5m4kBxE"
-artifacts_bucket = "aws-sam-cli-managed-prod-pipeline--artifactsbucket-txckp9tvibxu"
-image_repository = "985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-prod-pipeline-resources-imagerepository-gqribwl6ih7t"
+pipeline_execution_role = "arn:aws:iam::605134436600:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-jfQ0S3d3wlSx"
+cloudformation_execution_role = "arn:aws:iam::605134436600:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-fE8AUrmTOqPX"
+artifacts_bucket = "aws-sam-cli-managed-prod-pipeline--artifactsbucket-xydjn7ndeova"
+image_repository = "605134436600.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-prod-pipeline-resources-imagerepository-cmio6gkcuvxb"
 region = "eu-central-1"

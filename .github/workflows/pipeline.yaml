@@ -6,22 +6,22 @@ on:
       - 'main'
       - 'feature**'
   delete:
-    branches: 
+    branches:
       - 'feature**'
 
 env:
-  SAM_TEMPLATE: infra/main.stack.yaml
+  SAM_TEMPLATE: infra/main-stack.yaml
   TESTING_STACK_NAME: sam-app
-  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-Nczlvx5pd3Ek
-  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::985539763589:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-XmRsjzRf9BmG
-  TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-dev-pipeline-r-artifactsbucket-wnnd5c2g241w
-  TESTING_IMAGE_REPOSITORY: 985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-dev-pipeline-resources-imagerepository-puijfttbgcrv
+  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::605134436600:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-mVIQvC2b1ps9
+  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::605134436600:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-vtgQSXlGijaJ
+  TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-dev-pipeline-r-artifactsbucket-srhclqjttd3t
+  TESTING_IMAGE_REPOSITORY: 605134436600.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-dev-pipeline-resources-imagerepository-sumelqszylgv
   TESTING_REGION: eu-central-1
   PROD_STACK_NAME: sam-app
-  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-NMudPF745i0g
-  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::985539763589:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-gZiJU5m4kBxE
-  PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline--artifactsbucket-txckp9tvibxu
-  PROD_IMAGE_REPOSITORY: 985539763589.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-prod-pipeline-resources-imagerepository-gqribwl6ih7t
+  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::605134436600:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-jfQ0S3d3wlSx
+  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::605134436600:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-fE8AUrmTOqPX
+  PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline--artifactsbucket-xydjn7ndeova
+  PROD_IMAGE_REPOSITORY: 605134436600.dkr.ecr.eu-central-1.amazonaws.com/aws-sam-cli-managed-prod-pipeline-resources-imagerepository-cmio6gkcuvxb
   PROD_REGION: eu-central-1
 
 permissions:

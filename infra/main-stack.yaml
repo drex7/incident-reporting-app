@@ -9,18 +9,10 @@ Parameters:
   
 
 Resources:
-  Access:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub 'https://${TemplateBucketName}.s3.eu-central-1.amazonaws.com/infra/networking-template.yaml'
-      Parameters:
-        AppName: !Ref AppName
-        ProjectTag: !Ref ProjectTag
-
   AmplifyStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://${TemplateBucketName}.s3.eu-central-1.amazonaws.com/templates/amplify-stack.yaml'
+      TemplateURL: !Sub './amplify-stack.yaml'
       Parameters:
         AppName: !Ref AppName
         ProjectTag: !Ref ProjectTag
