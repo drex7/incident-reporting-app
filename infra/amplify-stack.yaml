@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation template to deploy an AWS Amplify application for the frontend of Incident Reporting app
+Description: CloudFormation template to deploy an AWS Amplify application for the frontend of Incident Reporting app.
 
 Parameters:
   GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
