@@ -5,7 +5,7 @@ Parameters:
   AppName: { Type: String, Default: Taskify }
   ProjectTag: { Type: String, Default: "incident-app" }
   GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
-  GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:605134436600:secret:cmrp-frontend/token-FY8SnN }
+  GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:${AWS::AccountId}:secret:cmrp-frontend/token-FY8SnN }
 
 Resources:
   AmplifyRole:
@@ -48,7 +48,7 @@ Resources:
               commands:
                 - npx ng build --configuration=production
           artifacts:
-            baseDirectory: dist/amplify-angular-template/browser
+            baseDirectory: dist/cmrp-frontend/browser
             files:
               - '**/*'
           cache:
