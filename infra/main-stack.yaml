@@ -5,7 +5,7 @@ Parameters:
   AppName: { Type: String, Default: Taskify }
   ProjectTag: { Type: String, Default: "incident-app" }
   GitRepoUrl: { Type: String, Default: https://github.com/drex7/cmrp-frontend.git }
-  GitHubTokenSecretARN: { Type: String, Default: arn:aws:secretsmanager:eu-central-1:${AWS::AccountId}:secret:cmrp-frontend/token-FY8SnN }
+  GitHubTokenSecret: { Type: String, Default: cmrp-frontend/token }
 
 Resources:
   AmplifyRole:
@@ -18,7 +18,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ "amplify.eu-central-1.amazonaws.com", "amplify.amazonaws.com" ]
+              Service: amplify.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess-Amplify
@@ -30,7 +30,7 @@ Resources:
       Description: Incident Reporting App
       Repository: !Ref GitRepoUrl
       IAMServiceRole: !GetAtt AmplifyRole.Arn
-      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecretARN}:SecretString:GithubAccessToken_}}' # Referencing a secret in Secrets Manager for GitHub token
+      AccessToken: !Sub '{{resolve:secretsmanager:${GitHubTokenSecret}:SecretString:GithubAccessToken_}}'
       BuildSpec: |
         version: 1
         backend:
