@@ -37,7 +37,7 @@ Resources:
           phases:
             build:
               commands:
-                - yarn install --immutable --cache-folder .yarn-cache --offline
+                - yarn install --frozen-lockfile --cache-folder .yarn-cache --prefer-offline
                 - echo $AWS_BRANCH
                 - |
                   case "${AWS_BRANCH}" in
