@@ -37,8 +37,26 @@ Resources:
           phases:
             build:
               commands:
-                - npm ci --cache .npm --prefer-offline
-                - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+                - yarn install --immutable --cache-folder .yarn-cache --offline
+                - echo $AWS_BRANCH
+                - |
+                  case "${AWS_BRANCH}" in
+                    main)
+                        echo "Deploying main branch"
+                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+                        ;;
+                    dev)
+                        echo "Deploying dev branch"
+                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+                        ;;
+                    feature*)
+                        echo "Deploying feature branch"
+                        npx ampx generate outputs --branch previews --app-id $AWS_APP_ID
+                        ;;
+                    *)
+                        echo "No deployment for branch ${AWS_BRANCH}"
+                        ;;
+                  esac
         frontend:
           phases:
             preBuild:
