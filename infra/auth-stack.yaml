@@ -146,7 +146,6 @@ Resources:
     Properties:
       Name: CognitoUserPoolAuth
       Type: COGNITO_USER_POOLS
-      RestApiId: !Ref ServerlessRestApi
       IdentitySource: method.request.header.Authorization
       ProviderARNs:
         - !GetAtt UserPool.Arn
