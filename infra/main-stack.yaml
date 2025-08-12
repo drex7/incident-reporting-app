@@ -126,6 +126,8 @@ Resources:
           AttributeType: S
         - AttributeName: district
           AttributeType: S
+        - AttributeName: assignedTo
+          AttributeType: S
       KeySchema:
         - AttributeName: incidentId
           KeyType: HASH
@@ -155,11 +157,11 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-        - IndexName: ByReportedByIndex
+        - IndexName: ByAssignedToIndex
           KeySchema:
-            - AttributeName: reportedBy
+            - AttributeName: assignedTo
               KeyType: HASH
-            - AttributeName: reportedAt
+            - AttributeName: incidentId
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
@@ -185,18 +187,6 @@ Resources:
         - Key: ProjectTag
           Value: !Ref ProjectTag
 
-  FeedbackTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: FeedbackTable
-      AttributeDefinitions:
-        - AttributeName: incidentId
-          AttributeType: S
-      KeySchema:
-        - AttributeName: incidentId
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-
 Outputs:
   AmplifyAppId:
     Description: The incidentId of the deployed Amplify application
@@ -204,9 +194,6 @@ Outputs:
   AmplifyAppName:
     Description: The name of the deployed Amplify application
     Value: !GetAtt AmplifyApp.AppName
-  INcidentTableName:
+  IncidentTableName:
     Description: The name of the DynamoDB table for incident reports
     Value: !Ref IncidentTable
-  FeedbackTableName:
-    Description: The name of the DynamoDB table for feedback
-    Value: !Ref FeedbackTable
