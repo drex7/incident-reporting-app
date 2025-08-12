@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Top-level stack template that deploys a City .
+
+Parameters:
+  ProjectTag: { Type: String, Default: "incident-app-infra" }
+
+Resources:
+  # DynamoDB Table for storing incident reports
+  IncidentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+        SSEType: AES256
+
+      AttributeDefinitions:
+        - AttributeName: incidentId
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: reportedAt
+          AttributeType: S
+        - AttributeName: reportedBy
+          AttributeType: S
+        - AttributeName: region
+          AttributeType: S
+        - AttributeName: district
+          AttributeType: S
+      KeySchema:
+        - AttributeName: incidentId
+          KeyType: HASH
+
+      GlobalSecondaryIndexes:
+        - IndexName: ByStatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: reportedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByCategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByReportedByIndex
+          KeySchema:
+            - AttributeName: reportedBy
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByReportedByIndex
+          KeySchema:
+            - AttributeName: reportedBy
+              KeyType: HASH
+            - AttributeName: reportedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByRegionIndex
+          KeySchema:
+            - AttributeName: region
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL    
+        - IndexName: ByDistrictCategoryIndex
+          KeySchema:
+            - AttributeName: district
+              KeyType: HASH
+            - AttributeName: category
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Name
+          Value: !Sub "${AppName}-IncidentReportsTable"
+        - Key: ProjectTag
+          Value: !Ref ProjectTag
+
+  FeedbackTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: FeedbackTable
+      AttributeDefinitions:
+        - AttributeName: incidentId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: incidentId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  INcidentTableName:
+    Description: The name of the DynamoDB table for incident reports
+    Value: !Ref IncidentTable
+  FeedbackTableName:
+    Description: The name of the DynamoDB table for feedback
+    Value: !Ref FeedbackTable
