@@ -8,6 +8,8 @@ Parameters:
   GitHubTokenSecret: { Type: String, Default: cmrp-frontend/token }
 
 Resources:
+
+  # ---- Amplify resources --------
   AmplifyRole:
     Type: AWS::IAM::Role
     Properties:
@@ -43,15 +45,15 @@ Resources:
                   case "${AWS_BRANCH}" in
                     main)
                         echo "Deploying main branch"
-                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-incidentId $AWS_APP_ID
                         ;;
                     dev)
                         echo "Deploying dev branch"
-                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+                        npx ampx pipeline-deploy --branch $AWS_BRANCH --app-incidentId $AWS_APP_ID
                         ;;
                     feature*)
                         echo "Deploying feature branch"
-                        npx ampx generate outputs --branch previews --app-id $AWS_APP_ID
+                        npx ampx generate outputs --branch previews --app-incidentId $AWS_APP_ID
                         ;;
                     *)
                         echo "No deployment for branch ${AWS_BRANCH}"
@@ -92,10 +94,106 @@ Resources:
       EnableAutoBuild: true
       Stage: DEVELOPMENT
 
+
+  # DynamoDB Table for storing incident reports
+  IncidentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+        SSEType: AES256
+
+      AttributeDefinitions:
+        - AttributeName: incidentId
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: reportedAt
+          AttributeType: S
+        - AttributeName: reportedBy
+          AttributeType: S
+        - AttributeName: region
+          AttributeType: S
+        - AttributeName: district
+          AttributeType: S
+        - AttributeName: assignedTo
+          AttributeType: S
+      KeySchema:
+        - AttributeName: incidentId
+          KeyType: HASH
+
+      GlobalSecondaryIndexes:
+        - IndexName: ByStatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: reportedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByCategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByReportedByIndex
+          KeySchema:
+            - AttributeName: reportedBy
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByAssignedToIndex
+          KeySchema:
+            - AttributeName: assignedTo
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ByRegionIndex
+          KeySchema:
+            - AttributeName: region
+              KeyType: HASH
+            - AttributeName: incidentId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL    
+        - IndexName: ByDistrictCategoryIndex
+          KeySchema:
+            - AttributeName: district
+              KeyType: HASH
+            - AttributeName: category
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Name
+          Value: !Sub "${AppName}-IncidentReportsTable"
+        - Key: ProjectTag
+          Value: !Ref ProjectTag
+
 Outputs:
   AmplifyAppId:
-    Description: The ID of the deployed Amplify application
+    Description: The incidentId of the deployed Amplify application
     Value: !GetAtt AmplifyApp.AppId
   AmplifyAppName:
     Description: The name of the deployed Amplify application
     Value: !GetAtt AmplifyApp.AppName
+  IncidentTableName:
+    Description: The name of the DynamoDB table for incident reports
+    Value: !Ref IncidentTable
