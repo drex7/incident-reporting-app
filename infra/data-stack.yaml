@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Top-level stack template that deploys a City .
+Description: DynamoDB stack template that deploys an IncidentTable.
 
 Parameters:
   ProjectTag: { Type: String, Default: "incident-app-infra" }
@@ -65,14 +65,6 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-        - IndexName: ByReportedByIndex
-          KeySchema:
-            - AttributeName: reportedBy
-              KeyType: HASH
-            - AttributeName: reportedAt
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
         - IndexName: ByRegionIndex
           KeySchema:
             - AttributeName: region
@@ -90,27 +82,11 @@ Resources:
           Projection:
             ProjectionType: ALL
       Tags:
-        - Key: Name
-          Value: !Sub "${AppName}-IncidentReportsTable"
         - Key: ProjectTag
           Value: !Ref ProjectTag
 
-  FeedbackTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: FeedbackTable
-      AttributeDefinitions:
-        - AttributeName: incidentId
-          AttributeType: S
-      KeySchema:
-        - AttributeName: incidentId
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
 
 Outputs:
-  INcidentTableName:
+  IncidentTableName:
     Description: The name of the DynamoDB table for incident reports
     Value: !Ref IncidentTable
-  FeedbackTableName:
-    Description: The name of the DynamoDB table for feedback
-    Value: !Ref FeedbackTable
